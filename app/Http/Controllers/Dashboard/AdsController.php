@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdsCompany;
 use App\Models\Advertisment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdsController extends Controller
 {
@@ -37,6 +38,8 @@ class AdsController extends Controller
     {
         // dd($request->all());
 
+        $group = Auth::user()->group->id;
+
         $this->validate($request, [
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
@@ -50,7 +53,8 @@ class AdsController extends Controller
             'image' => $image_path,
             'video' => $request->video,
             'period'=> $request->period,
-            'provider'=> $request->provider
+            'provider'=> $request->provider,
+            'group_id'=> $group
         ]);
 
         session()->flash('success', __('Ads Added Successfully'));
