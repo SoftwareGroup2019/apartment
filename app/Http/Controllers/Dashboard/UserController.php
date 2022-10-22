@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Group;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -19,22 +21,22 @@ class UserController extends Controller
      */
     public function index()
     {
-
-
         if (Auth::user()->role->rolename == "Group") 
         {
            $group = Auth::user()->group->id;
-           $users =  User::where(['role_id'=>2,'group_id'=>$group])->paginate(10);
+           $role = Role::where(['rolename'=>'Service'])->value('id');
+           $users =  User::where(['role_id'=>$role,'group_id'=>$group])->paginate(10);
            return view('dashboard.user.index',[
                'alluser'=>$users
            ]);
         }
-
-        $user = User::paginate(10);
-
-        return view('dashboard.user.index',[
-            'alluser'=>$user
-        ]);
+        else
+        {
+            $user = User::paginate(10);
+            return view('dashboard.user.index',[
+                'alluser'=>$user
+            ]);
+        }
     }
 
     /**
@@ -44,12 +46,28 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = DB::select('select id, rolename from roles');
-        $groups = DB::select('select id, groupname from groups');
-        return view('dashboard.user.create',[
-            'allrole'=>$roles,
-            'allgroup'=>$groups
-        ]);
+
+        if (Auth::user()->role->rolename == "Group") 
+        {
+            $user_group = Auth::user()->group->groupname;
+            $role = Role::where(['rolename'=>'Service'])->value('id');
+            $group_id = Group::where(['groupname'=>$user_group])->value('id');
+            
+            return view('dashboard.user.create',[
+                'roleid'=>$role,
+                'group'=>$group_id
+            ]);
+        } 
+        else 
+        { 
+            $roles = Role::get();
+            $groups = Group::get();
+            return view('dashboard.user.create',[
+                'allrole'=>$roles,
+                'allgroup'=>$groups
+            ]);
+        }
+        
     }
 
     /**

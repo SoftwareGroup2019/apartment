@@ -53,6 +53,10 @@
                                         <label>Password</label>
                                         <input type="password" class="form-control" placeholder="Password" name="password">
                                     </div>
+                                    @if (Auth::user()->role->rolename == "Group")
+                                        <input type="hidden" name="roleid" value="{{ $roleid }}">
+                                        <input type="hidden" name="groupid" value="{{ $group }}">
+                                    @else
                                     <div class="form-group">
                                         <label>Role</label>
                                         <select class="form-control" name="role">
@@ -70,7 +74,8 @@
                                             <option value="{{ $group->id }}">{{ $group->groupname }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> 
+                                    @endif
                                     <button type="submit" class="btn btn-default">Submit</button>
                                 </form>
                             </div>
