@@ -33,7 +33,7 @@
 				<form class="login100-form validate-form" action="/login" method="POST">
                     @csrf
 					<span class="login100-form-title">
-						Member Login
+						Member
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
